@@ -1,0 +1,37 @@
+# Hardware connects on launch. Policy motion starts only after typing /start.
+robot:
+  type: so101_follower
+  port: /dev/serial/by-id/usb-1a86_USB_Single_Serial_5B61035286-if00
+  id: ankit_follower_arm
+  use_degrees: true
+  disable_torque_on_disconnect: true
+  cameras:
+    front:
+      type: opencv
+      index_or_path: /dev/video4
+      width: 640
+      height: 480
+      fps: 30
+      warmup_s: 3
+      fourcc: MJPG
+strategy:
+  type: base
+inference:
+  type: remote
+  endpoint: tcp/127.0.0.1:17447
+  deployment: so101-bluecube
+  semantics: so101-degrees-gripper-percent-v1
+  mode: chunk
+  chunk_merge: aligned
+  refill_seconds: 0.83
+  blend_steps: 0
+  action_timeout_s: 5.0
+  max_observation_age_s: 5.0
+fps: 30.0
+task: Grab the blue deformable cube and place it in the white tea cup
+interactive: true
+# Bound each /start trial, keeping the session/model warm between trials.
+duration: 60.0
+return_to_initial_position: false
+display_data: false
+play_sounds: false
